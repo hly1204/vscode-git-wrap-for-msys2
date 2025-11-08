@@ -41,8 +41,8 @@ target_compile_definitions(vscode-git-wrap-for-msys2 PRIVATE
 )
 
 target_compile_options(vscode-git-wrap-for-msys2 PRIVATE
-    $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
-    $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
+    $<$<C_COMPILER_ID:MSVC>:/W4 /WX>
+    $<$<NOT:$<C_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
 )
 
 target_sources(vscode-git-wrap-for-msys2 PRIVATE main.c)

@@ -22,7 +22,7 @@ pacman -S mingw-w64-ucrt-x86_64-toolchain \
           mingw-w64-ucrt-x86_64-ninja
 ```
 
-### CMake
+### CMake (MSVC/GCC/CLANG)
 
 ```shell
 cmake -B build \
