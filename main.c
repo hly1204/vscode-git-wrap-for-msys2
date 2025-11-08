@@ -234,10 +234,6 @@ int _tmain(int argc, TCHAR *argv[])
     ZeroMemory(&cmd, sizeof(cmd));
     set_cmd(cmd, _countof(cmd), argc, argv);
 
-    FILE *f = fopen("C:\\msys64\\home\\hly\\cmd.txt", "a");
-    fprintf(f, "%s\r\n", cmd);
-    fclose(f);
-
     set_env();
     if (!cmd_contains_rev_parse(argc, argv)) {
         create_git_process(cmd);
