@@ -9,8 +9,10 @@
 #define GIT_PATH (USR_BIN_PATH TEXT("\\git.exe"))
 #define CYGPATH_PATH (USR_BIN_PATH TEXT("\\cygpath.exe"))
 #define ADDITIONAL_PATH (TEXT(";") USR_BIN_PATH)
-#define BUFSIZE 4097
-#define CMD_BUFSIZE 4097
+#define BUFSIZE (8191 + 1)
+/// \see
+/// https://learn.microsoft.com/en-us/troubleshoot/windows-client/shell-experience/command-line-string-limitation
+#define CMD_BUFSIZE (32767 + 1)
 
 static BOOL cmd_contains_rev_parse(int argc, TCHAR *argv[])
 {
