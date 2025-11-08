@@ -22,4 +22,6 @@ Hopefully this would work.
 
 ## License
 
-[Unlicense](https://unlicense.org/) or [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/legalcode.en).
+[Unlicense](https://unlicense.org/) or [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/legalcode.en) for the [`main.c`](./main.c) file.
+
+[BSD-3-Clause](https://opensource.org/license/BSD-3-clause) for the [`.clang-format`](./.clang-format) file which I copied from the Qt project.
