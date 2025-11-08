@@ -1,0 +1,4 @@
+.vscode/
+.zed/
+build/
+cmake-build*/
