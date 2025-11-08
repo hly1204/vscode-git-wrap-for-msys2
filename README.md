@@ -35,21 +35,23 @@ ninja
 ### GCC or CLANG
 
 ```shell
-cc -O2 -std=c11 -fPIE -Wall -Wextra -Wpedantic -Werror main.c -o vscode-git-wrap-for-msys2
+cc -O2 -std=c11 -fPIE -Wall -Wextra -Wpedantic -Werror main.c \
+   -o vscode-git-wrap-for-msys2
 strip -p vscode-git-wrap-for-msys2.exe
 ```
 
 or
 
 ```shell
-clang -O2 -std=c11 -fPIE -Wall -Wextra -Wpedantic -Werror main.c -o vscode-git-wrap-for-msys2
+clang -O2 -std=c11 -fPIE -Wall -Wextra -Wpedantic -Werror main.c \
+      -o vscode-git-wrap-for-msys2
 strip -p vscode-git-wrap-for-msys2.exe
 ```
 
-If you change your installation directory of msys2 other than `C:\msys64`, you will need to change the definition in `main.c` which is
+If you change your installation directory of msys2 other than `c:\msys64`, you will need to change the definition in `main.c` which is
 
 ```c
-#define USR_BIN_PATH TEXT("<your-path-to-msys64>\\usr\\bin")
+#define USR_BIN_PATH TEXT("<full-path-to-msys64>\\usr\\bin")
 ```
 
 Hopefully this would work.
