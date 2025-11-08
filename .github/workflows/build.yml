@@ -1,0 +1,42 @@
+name: Build tests
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: x86_64, sys: MINGW64 }
+          - { name: ucrt-x86_64, sys: UCRT64 }
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: ${{ matrix.sys }}
+          update: true
+          install: >-
+            git
+            mingw-w64-${{ matrix.name }}-toolchain
+            mingw-w64-${{ matrix.name }}-cmake
+            mingw-w64-${{ matrix.name }}-ninja
+
+      - name: Debug Build
+        shell: msys2 {0}
+        run: |
+          cmake -B build-debug -DCMAKE_BUILD_TYPE=Debug -S .
+          cd build-debug
+          cmake --build .
+      
+      - name: Release Build
+        shell: msys2 {0}
+        run: |
+          cmake -B build-release -DCMAKE_BUILD_TYPE=Release -S .
+          cd build-release
+          cmake --build .

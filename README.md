@@ -12,6 +12,40 @@ Compile in [UCRT64](https://www.msys2.org/docs/environments/) and put the execut
 "git.path": "C:\\msys64\\home\\hly\\vscode-git-wrap-for-msys2.exe"
 ```
 
+## Build
+
+Install all build dependencies first.
+
+```shell
+pacman -S mingw-w64-ucrt-x86_64-toolchain \
+          mingw-w64-ucrt-x86_64-cmake \
+          mingw-w64-ucrt-x86_64-ninja
+```
+
+### CMake
+
+```shell
+cmake -B build \
+      -D CMAKE_BUILD_TYPE=Release \
+      -G Ninja
+cd build
+ninja
+```
+
+### GCC or CLANG
+
+```shell
+cc main.c -O2 -o vscode-git-wrap-for-msys2 -fPIC
+strip -p vscode-git-wrap-for-msys2.exe
+```
+
+or
+
+```shell
+clang main.c -O2 -o vscode-git-wrap-for-msys2 -fPIC
+strip -p vscode-git-wrap-for-msys2.exe
+```
+
 If you change your installation directory of msys2 other than `C:\msys64`, you will need to change the definition in `main.c` which is
 
 ```c
