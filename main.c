@@ -141,6 +141,10 @@ static void create_git_process2(PTCHAR cmd)
     HANDLE hGitStd_OUT_Wr = NULL;
     SECURITY_ATTRIBUTES seAttr;
 
+#ifdef UNICODE
+    dwFlags = CREATE_UNICODE_ENVIRONMENT;
+#endif
+
     ZeroMemory(&seAttr, sizeof(seAttr));
     seAttr.nLength = sizeof(seAttr);
     seAttr.bInheritHandle = TRUE;
@@ -201,10 +205,6 @@ static void create_git_process2(PTCHAR cmd)
     si_Git.hStdError = GetStdHandle(STD_ERROR_HANDLE);
     si_Git.dwFlags |= STARTF_USESTDHANDLES;
     ZeroMemory(&pi_Git, sizeof(pi_Git));
-
-#ifdef UNICODE
-    dwFlags = CREATE_UNICODE_ENVIRONMENT;
-#endif
 
     // Passing all arguments to child process
     if (!CreateProcess(NULL, cmd, NULL, NULL, TRUE, dwFlags, NULL, NULL, &si_Git, &pi_Git)) {
