@@ -182,7 +182,7 @@ static void create_git_process2(PTCHAR cmd)
         exit(EXIT_FAILURE);
     }
 
-    if (!SetHandleInformation(hGitStd_OUT_Rd, HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT)) {
+    if (!SetHandleInformation(hGitStd_OUT_Rd, HANDLE_FLAG_INHERIT, 0)) {
         fprintf(stderr, "SetHandleInformation failed (%d).\n", (int)GetLastError());
         CloseHandle(hGitStd_OUT_Rd);
         CloseHandle(hGitStd_OUT_Wr);
