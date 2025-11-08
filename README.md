@@ -35,14 +35,14 @@ ninja
 ### GCC or CLANG
 
 ```shell
-cc main.c -O2 -o vscode-git-wrap-for-msys2 -fPIC
+cc -O2 -std=c11 -fPIE -Wall -Wextra -Wpedantic -Werror main.c -o vscode-git-wrap-for-msys2
 strip -p vscode-git-wrap-for-msys2.exe
 ```
 
 or
 
 ```shell
-clang main.c -O2 -o vscode-git-wrap-for-msys2 -fPIC
+clang -O2 -std=c11 -fPIE -Wall -Wextra -Wpedantic -Werror main.c -o vscode-git-wrap-for-msys2
 strip -p vscode-git-wrap-for-msys2.exe
 ```
 
