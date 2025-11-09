@@ -1,4 +1,4 @@
-# VSCode-Git-Wrap-For-Msys2
+# VSCode-Git-Wrap-for-Msys2
 
 See [#134146](https://github.com/microsoft/vscode/pull/134146).
 
