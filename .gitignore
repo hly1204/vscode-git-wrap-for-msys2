@@ -1,4 +1,6 @@
 .vscode/
 .zed/
+.cache/
 build*/
 cmake-build*/
+compile_commands.json
