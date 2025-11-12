@@ -1,10 +1,18 @@
+#ifdef UNICODE
+#define _UNICODE 1
+#endif
+
 #include <windows.h>
+
+#include <tchar.h>
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <tchar.h>
 #include <strsafe.h>
 
+#ifndef USR_BIN_PATH
 #define USR_BIN_PATH TEXT("c:\\msys64\\usr\\bin")
+#endif
 
 #define GIT_PATH (USR_BIN_PATH TEXT("\\git.exe"))
 #define CYGPATH_PATH (USR_BIN_PATH TEXT("\\cygpath.exe"))
@@ -14,10 +22,42 @@
 /// https://learn.microsoft.com/en-us/troubleshoot/windows-client/shell-experience/command-line-string-limitation
 #define CMD_BUFSIZE (32767 + 1)
 
+#ifndef NDEBUG
+static BOOL get_exe_path(PTCHAR dest, size_t destSize)
+{
+    DWORD dwRet = GetModuleFileName(NULL, dest, (DWORD)destSize);
+    DWORD dwErr;
+
+    if (dwRet == 0)
+    {
+        fprintf(stderr, "GetModuleFileName failed (%d).\n", (int)GetLastError());
+        return FALSE;
+    }
+
+    if (dwRet == destSize)
+    {
+        dwErr = GetLastError();
+        if (dwErr == ERROR_INSUFFICIENT_BUFFER)
+        {
+            fprintf(stderr, "GetModuleFileName failed (%d, %s).\n", (int)dwErr, "ERROR_INSUFFICIENT_BUFFER");
+        }
+        else
+        {
+            fprintf(stderr, "GetModuleFileName failed (%d).\n", (int)dwErr);
+        }
+        return FALSE;
+    }
+
+    return TRUE;
+}
+#endif
+
 static BOOL cmd_contains_rev_parse(int argc, TCHAR *argv[])
 {
-    for (int i = 1; i < argc; ++i) {
-        if (_tcscmp(argv[i], TEXT("rev-parse")) == 0) {
+    for (int i = 1; i < argc; ++i)
+    {
+        if (_tcscmp(argv[i], TEXT("rev-parse")) == 0)
+        {
             return TRUE;
         }
     }
@@ -26,17 +66,21 @@ static BOOL cmd_contains_rev_parse(int argc, TCHAR *argv[])
 
 static void set_cmd(PTCHAR dest, size_t destSize, int argc, TCHAR *argv[])
 {
-    if (FAILED(StringCchCopy(dest, destSize, GIT_PATH))) {
+    if (FAILED(StringCchCopy(dest, destSize, GIT_PATH)))
+    {
         fprintf(stderr, "Error copy strings.\n");
         exit(EXIT_FAILURE);
     }
 
-    for (int i = 1; i < argc; ++i) {
-        if (FAILED(StringCchCat(dest, destSize, TEXT(" ")))) {
+    for (int i = 1; i < argc; ++i)
+    {
+        if (FAILED(StringCchCat(dest, destSize, TEXT(" "))))
+        {
             fprintf(stderr, "Error concatenating strings.\n");
             exit(EXIT_FAILURE);
         }
-        if (FAILED(StringCchCat(dest, destSize, argv[i]))) {
+        if (FAILED(StringCchCat(dest, destSize, argv[i])))
+        {
             fprintf(stderr, "Error concatenating strings.\n");
             exit(EXIT_FAILURE);
         }
@@ -49,55 +93,70 @@ static void set_env(void)
     DWORD dwRet, dwErr;
 
     oldPath = (PTCHAR)malloc(BUFSIZE * sizeof(TCHAR));
-    if (oldPath == NULL) {
+    if (oldPath == NULL)
+    {
         fprintf(stderr, "Out of memory.\n");
         exit(EXIT_FAILURE);
     }
 
     dwRet = GetEnvironmentVariable(TEXT("PATH"), oldPath, BUFSIZE);
-    if (dwRet == 0) {
+    if (dwRet == 0)
+    {
         dwErr = GetLastError();
-        if (dwErr == ERROR_ENVVAR_NOT_FOUND) {
+        if (dwErr == ERROR_ENVVAR_NOT_FOUND)
+        {
             fprintf(stderr, "Environment variable does not exist.\n");
         }
         free(oldPath);
         exit(EXIT_FAILURE);
-    } else if (BUFSIZE < dwRet) {
+    }
+    else if (BUFSIZE < dwRet)
+    {
         newPath = (PTCHAR)realloc(oldPath, (dwRet + _countof(ADDITIONAL_PATH)) * sizeof(TCHAR));
-        if (newPath == NULL) {
+        if (newPath == NULL)
+        {
             fprintf(stderr, "Out of memory.\n");
             free(oldPath);
             exit(EXIT_FAILURE);
         }
         oldPath = NULL;
         dwRet = GetEnvironmentVariable(TEXT("PATH"), newPath, dwRet + _countof(ADDITIONAL_PATH));
-        if (dwRet == 0) {
+        if (dwRet == 0)
+        {
             fprintf(stderr, "GetEnvironmentVariable failed (%d).\n", (int)GetLastError());
             free(newPath);
             exit(EXIT_FAILURE);
-        } else {
-            if (FAILED(StringCchCat(newPath, dwRet + _countof(ADDITIONAL_PATH), ADDITIONAL_PATH))) {
+        }
+        else
+        {
+            if (FAILED(StringCchCat(newPath, dwRet + _countof(ADDITIONAL_PATH), ADDITIONAL_PATH)))
+            {
                 fprintf(stderr, "Error concatenating strings.\n");
                 free(newPath);
                 exit(EXIT_FAILURE);
             }
         }
-    } else {
+    }
+    else
+    {
         newPath = (PTCHAR)realloc(oldPath, (dwRet + _countof(ADDITIONAL_PATH)) * sizeof(TCHAR));
-        if (newPath == NULL) {
+        if (newPath == NULL)
+        {
             fprintf(stderr, "Out of memory.\n");
             free(oldPath);
             exit(EXIT_FAILURE);
         }
         oldPath = NULL;
-        if (FAILED(StringCchCat(newPath, dwRet + _countof(ADDITIONAL_PATH), ADDITIONAL_PATH))) {
+        if (FAILED(StringCchCat(newPath, dwRet + _countof(ADDITIONAL_PATH), ADDITIONAL_PATH)))
+        {
             fprintf(stderr, "Error concatenating strings.\n");
             free(newPath);
             exit(EXIT_FAILURE);
         }
     }
 
-    if (!SetEnvironmentVariable(TEXT("PATH"), newPath)) {
+    if (!SetEnvironmentVariable(TEXT("PATH"), newPath))
+    {
         fprintf(stderr, "SetEnvironmentVariable failed (%d).\n", (int)GetLastError());
         free(newPath);
         exit(EXIT_FAILURE);
@@ -121,7 +180,8 @@ static void create_git_process(PTCHAR cmd)
     ZeroMemory(&pi, sizeof(pi));
 
     // Passing all arguments to child process
-    if (!CreateProcess(NULL, cmd, NULL, NULL, FALSE, dwFlags, NULL, NULL, &si, &pi)) {
+    if (!CreateProcess(NULL, cmd, NULL, NULL, FALSE, dwFlags, NULL, NULL, &si, &pi))
+    {
         fprintf(stderr, "Error creating process.\n");
         exit(EXIT_FAILURE);
     }
@@ -149,12 +209,14 @@ static void create_git_process2(PTCHAR cmd)
     seAttr.nLength = sizeof(seAttr);
     seAttr.bInheritHandle = TRUE;
     seAttr.lpSecurityDescriptor = NULL;
-    if (!CreatePipe(&hGitStd_OUT_Rd, &hGitStd_OUT_Wr, &seAttr, 0)) {
+    if (!CreatePipe(&hGitStd_OUT_Rd, &hGitStd_OUT_Wr, &seAttr, 0))
+    {
         fprintf(stderr, "CreatePipe failed (%d).\n", (int)GetLastError());
         exit(EXIT_FAILURE);
     }
 
-    if (!SetHandleInformation(hGitStd_OUT_Wr, HANDLE_FLAG_INHERIT, 0)) {
+    if (!SetHandleInformation(hGitStd_OUT_Wr, HANDLE_FLAG_INHERIT, 0))
+    {
         fprintf(stderr, "SetHandleInformation failed (%d).\n", (int)GetLastError());
         CloseHandle(hGitStd_OUT_Rd);
         CloseHandle(hGitStd_OUT_Wr);
@@ -170,15 +232,17 @@ static void create_git_process2(PTCHAR cmd)
     si_Cygpath.dwFlags |= STARTF_USESTDHANDLES;
     ZeroMemory(&pi_Cygpath, sizeof(pi_Cygpath));
 
-    if (!CreateProcess(NULL, (USR_BIN_PATH TEXT("\\cygpath.exe -wf -")), NULL, NULL, TRUE, dwFlags,
-                       NULL, NULL, &si_Cygpath, &pi_Cygpath)) {
+    if (!CreateProcess(NULL, (USR_BIN_PATH TEXT("\\cygpath.exe -wf -")), NULL, NULL, TRUE, dwFlags, NULL, NULL,
+                       &si_Cygpath, &pi_Cygpath))
+    {
         fprintf(stderr, "Error creating process.\n");
         CloseHandle(hGitStd_OUT_Rd);
         CloseHandle(hGitStd_OUT_Wr);
         exit(EXIT_FAILURE);
     }
 
-    if (!SetHandleInformation(hGitStd_OUT_Wr, HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT)) {
+    if (!SetHandleInformation(hGitStd_OUT_Wr, HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT))
+    {
         fprintf(stderr, "SetHandleInformation failed (%d).\n", (int)GetLastError());
         CloseHandle(hGitStd_OUT_Rd);
         CloseHandle(hGitStd_OUT_Wr);
@@ -188,7 +252,8 @@ static void create_git_process2(PTCHAR cmd)
         exit(EXIT_FAILURE);
     }
 
-    if (!SetHandleInformation(hGitStd_OUT_Rd, HANDLE_FLAG_INHERIT, 0)) {
+    if (!SetHandleInformation(hGitStd_OUT_Rd, HANDLE_FLAG_INHERIT, 0))
+    {
         fprintf(stderr, "SetHandleInformation failed (%d).\n", (int)GetLastError());
         CloseHandle(hGitStd_OUT_Rd);
         CloseHandle(hGitStd_OUT_Wr);
@@ -207,7 +272,8 @@ static void create_git_process2(PTCHAR cmd)
     ZeroMemory(&pi_Git, sizeof(pi_Git));
 
     // Passing all arguments to child process
-    if (!CreateProcess(NULL, cmd, NULL, NULL, TRUE, dwFlags, NULL, NULL, &si_Git, &pi_Git)) {
+    if (!CreateProcess(NULL, cmd, NULL, NULL, TRUE, dwFlags, NULL, NULL, &si_Git, &pi_Git))
+    {
         fprintf(stderr, "Error creating process.\n");
         CloseHandle(hGitStd_OUT_Rd);
         CloseHandle(hGitStd_OUT_Wr);
@@ -232,14 +298,41 @@ static void create_git_process2(PTCHAR cmd)
 int _tmain(int argc, TCHAR *argv[])
 {
     TCHAR cmd[CMD_BUFSIZE];
+#ifndef NDEBUG
+    TCHAR exe_path[BUFSIZE];
+#endif
 
-    ZeroMemory(&cmd, sizeof(cmd));
     set_cmd(cmd, _countof(cmd), argc, argv);
 
+#ifndef NDEBUG
+    if (get_exe_path(exe_path, _countof(exe_path)) &&
+        SUCCEEDED(StringCchCat(exe_path, _countof(exe_path), TEXT(".log"))))
+    {
+#ifdef UNICODE
+        FILE *f = _wfopen(exe_path, L"a");
+#else
+        FILE *f = fopen(exe_path, "a");
+#endif
+        if (f != NULL)
+        {
+#ifdef UNICODE
+            fwprintf(f, L"[GitCall] %ls\n", cmd);
+#else
+            fprintf(f, "[GitCall] %s\n", cmd);
+#endif
+            fflush(f);
+            fclose(f);
+        }
+    }
+#endif
+
     set_env();
-    if (!cmd_contains_rev_parse(argc, argv)) {
+    if (!cmd_contains_rev_parse(argc, argv))
+    {
         create_git_process(cmd);
-    } else {
+    }
+    else
+    {
         create_git_process2(cmd);
     }
     exit(EXIT_SUCCESS);
