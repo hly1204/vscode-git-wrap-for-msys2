@@ -1,6 +1,6 @@
 # VSCode-Git-Wrap-for-Msys2
 
-See [#134146](https://github.com/microsoft/vscode/pull/134146).
+What is this for? See [#134146](https://github.com/microsoft/vscode/pull/134146).
 
 Since VSCode consistently looking for an **executable** on Windows, old workarounds cannot work, so I make a wrapped executable for Msys2 Git.
 
@@ -55,6 +55,16 @@ If you change your installation directory of msys2 other than `c:\msys64`, you w
 ```
 
 Hopefully this would work.
+
+## Known issues
+
+VSCode will call [`git check-ignore -v -z --stdin`](https://git-scm.com/docs/git-check-ignore) to check the file state. Currently it is not going to work. I may fix this later on.
+
+Here are some ideas, since Git `Read pathnames from the standard input, one per line, instead of from the command-line.`, we could simply use the `cygpath -wf -` to solve it. For the output, it should be
+
+```text
+<source> <NULL> <linenum> <NULL> <pattern> <NULL> <pathname> <NULL>
+```
 
 ## License
 
