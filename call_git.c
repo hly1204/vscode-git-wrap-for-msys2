@@ -79,21 +79,11 @@ BOOL call_git_pipe_cygpath(PTCHAR cmd, LPDWORD lpExitCode)
         return FALSE;
     }
 
+    CloseHandle(hGit_STDOUT_READ);
+
     if (!SetHandleInformation(hGit_STDOUT_WRITE, HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT))
     {
         fprintf(stderr, "SetHandleInformation failed (%ld).\n", GetLastError());
-        CloseHandle(hGit_STDOUT_READ);
-        CloseHandle(hGit_STDOUT_WRITE);
-        WaitForSingleObject(piCygpath.hProcess, INFINITE);
-        CloseHandle(piCygpath.hProcess);
-        CloseHandle(piCygpath.hThread);
-        return FALSE;
-    }
-
-    if (!SetHandleInformation(hGit_STDOUT_READ, HANDLE_FLAG_INHERIT, 0))
-    {
-        fprintf(stderr, "SetHandleInformation failed (%ld).\n", GetLastError());
-        CloseHandle(hGit_STDOUT_READ);
         CloseHandle(hGit_STDOUT_WRITE);
         WaitForSingleObject(piCygpath.hProcess, INFINITE);
         CloseHandle(piCygpath.hProcess);
@@ -111,7 +101,6 @@ BOOL call_git_pipe_cygpath(PTCHAR cmd, LPDWORD lpExitCode)
     if (!CreateProcess(NULL, cmd, NULL, NULL, TRUE, dwFlags, NULL, NULL, &siGit, &piGit))
     {
         fprintf(stderr, "Error creating process.\n");
-        CloseHandle(hGit_STDOUT_READ);
         CloseHandle(hGit_STDOUT_WRITE);
         WaitForSingleObject(piCygpath.hProcess, INFINITE);
         CloseHandle(piCygpath.hProcess);
@@ -119,6 +108,7 @@ BOOL call_git_pipe_cygpath(PTCHAR cmd, LPDWORD lpExitCode)
         return FALSE;
     }
 
+    CloseHandle(hGit_STDOUT_WRITE);
     WaitForSingleObject(piGit.hProcess, INFINITE);
     if (!GetExitCodeProcess(piGit.hProcess, lpExitCode))
     {
@@ -128,9 +118,6 @@ BOOL call_git_pipe_cygpath(PTCHAR cmd, LPDWORD lpExitCode)
 
     CloseHandle(piGit.hProcess);
     CloseHandle(piGit.hThread);
-
-    CloseHandle(hGit_STDOUT_READ);
-    CloseHandle(hGit_STDOUT_WRITE);
 
     WaitForSingleObject(piCygpath.hProcess, INFINITE);
     CloseHandle(piCygpath.hProcess);
