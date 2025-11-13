@@ -2,6 +2,7 @@
 #include "get_exe_path.h"
 #include "pch.h"
 #include "set_cmd.h"
+#include "set_env.h"
 
 INT _tmain(INT argc, TCHAR *argv[])
 {
@@ -34,6 +35,9 @@ INT _tmain(INT argc, TCHAR *argv[])
         }
     }
 #endif
+
+    /* set_env() is required, otherwise git may failed to use other *.exe */
+    set_env();
 
     if (cmd_contains_rev_parse(argc, argv))
     {
