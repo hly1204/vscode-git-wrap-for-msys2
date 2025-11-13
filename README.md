@@ -32,22 +32,6 @@ cd build
 ninja
 ```
 
-### GCC or CLANG
-
-```shell
-cc -O2 -std=c11 -fPIE -Wall -Wextra -Wpedantic -Werror main.c \
-   -o vscode-git-wrap-for-msys2
-strip -p vscode-git-wrap-for-msys2.exe
-```
-
-or
-
-```shell
-clang -O2 -std=c11 -fPIE -Wall -Wextra -Wpedantic -Werror main.c \
-      -o vscode-git-wrap-for-msys2
-strip -p vscode-git-wrap-for-msys2.exe
-```
-
 If you change your installation directory of msys2 other than `c:\msys64`, you will need to change the definition in `main.c` which is
 
 ```c

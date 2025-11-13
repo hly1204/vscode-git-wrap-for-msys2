@@ -45,4 +45,19 @@ target_compile_options(vscode-git-wrap-for-msys2 PRIVATE
     $<$<NOT:$<C_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
 )
 
-target_sources(vscode-git-wrap-for-msys2 PRIVATE main.c)
+target_sources(vscode-git-wrap-for-msys2 PRIVATE
+    pch.h
+
+    call_git.h
+    get_exe_path.h
+    set_cmd.h
+    set_env.h
+)
+target_sources(vscode-git-wrap-for-msys2 PRIVATE
+    main.c
+
+    call_git.c
+    get_exe_path.c
+    set_cmd.c
+    set_env.c
+)
