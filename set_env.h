@@ -4,7 +4,7 @@
 #include "pch.h"
 
 /**
- * @brief Set `PATH` to `PATH;USR_BIN_PATH`
+ * @brief Set `PATH` to `USR_BIN_PATH;PATH`
  */
 BOOL set_env(VOID);
 
