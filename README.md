@@ -54,4 +54,4 @@ And another `cygpath` call is needed (and some parse stuffs).
 
 ## License
 
-[Unlicense](https://unlicense.org/) or [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/legalcode.en) for the [`main.c`](./main.c) file.
+[Unlicense](https://unlicense.org/).
