@@ -9,7 +9,7 @@ BOOL win_path_to_unix_path(PTCHAR buffer, DWORD dwBufferSize, LPCTSTR path)
     STARTUPINFO siCygpath;
     PROCESS_INFORMATION piCygpath;
 
-    TCHAR cmd[BUFSIZE];
+    TCHAR cmd[CMD_BUFSIZE];
     DWORD iResult;
     DWORD iBytesRead;
 
@@ -108,7 +108,7 @@ BOOL unix_path_to_win_path(PTCHAR buffer, DWORD dwBufferSize, LPCTSTR path)
     STARTUPINFO siCygpath;
     PROCESS_INFORMATION piCygpath;
 
-    TCHAR cmd[BUFSIZE];
+    TCHAR cmd[CMD_BUFSIZE];
     DWORD iResult;
     DWORD iBytesRead;
 
