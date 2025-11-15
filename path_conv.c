@@ -86,7 +86,7 @@ BOOL win_path_to_unix_path(PCHAR buffer, DWORD dwBufferSize, LPCTSTR path)
     /* Trim whitespace */
     while (--bufferEnd >= buffer && isspace(*bufferEnd))
     {
-        *bufferEnd = TEXT('\0');
+        *bufferEnd = '\0';
     }
     if (bufferEnd + 1 >= buffer + dwBufferSize)
     {
@@ -95,7 +95,7 @@ BOOL win_path_to_unix_path(PCHAR buffer, DWORD dwBufferSize, LPCTSTR path)
     }
     else
     {
-        *++bufferEnd = TEXT('\0');
+        *++bufferEnd = '\0';
     }
 
     return TRUE;
@@ -182,7 +182,7 @@ BOOL unix_path_to_win_path(PCHAR buffer, DWORD dwBufferSize, LPCTSTR path)
     /* Trim whitespace */
     while (--bufferEnd >= buffer && isspace(*bufferEnd))
     {
-        *bufferEnd = TEXT('\0');
+        *bufferEnd = '\0';
     }
     if (bufferEnd + 1 >= buffer + dwBufferSize)
     {
@@ -191,7 +191,7 @@ BOOL unix_path_to_win_path(PCHAR buffer, DWORD dwBufferSize, LPCTSTR path)
     }
     else
     {
-        *++bufferEnd = TEXT('\0');
+        *++bufferEnd = '\0';
     }
 
     return TRUE;

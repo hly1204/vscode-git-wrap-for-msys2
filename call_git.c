@@ -1,14 +1,14 @@
 #include "call_git.h"
 #include "path_conv.h"
 
-static INT count_null(PCTSTR begin, PCTSTR end)
+static INT count_null(PCSTR begin, PCSTR end)
 {
     PCTSTR i;
     INT iCount = 0;
 
     for (i = begin; i != end; ++i)
     {
-        if (*i == TEXT('\0'))
+        if (*i == '\0')
         {
             ++iCount;
         }
@@ -224,7 +224,7 @@ BOOL call_git_check_ignore_v_z_stdin(LPDWORD lpExitCode)
             for (iPartCount = 0, bufferIterator = buffer; bufferIterator != bufferEnd && iPartCount < 4;
                  ++bufferIterator)
             {
-                if (*bufferIterator == TEXT('\0'))
+                if (*bufferIterator == '\0')
                 {
                     partEnd[iPartCount++] = bufferIterator;
                 }
