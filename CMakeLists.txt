@@ -52,6 +52,7 @@ target_sources(vscode-git-wrap-for-msys2 PRIVATE
     get_exe_path.h
     set_cmd.h
     set_env.h
+    path_conv.h
 )
 target_sources(vscode-git-wrap-for-msys2 PRIVATE
     main.c
@@ -60,4 +61,5 @@ target_sources(vscode-git-wrap-for-msys2 PRIVATE
     get_exe_path.c
     set_cmd.c
     set_env.c
+    path_conv.c
 )

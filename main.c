@@ -50,6 +50,14 @@ INT _tmain(INT argc, TCHAR *argv[])
             exit(EXIT_FAILURE);
         }
     }
+    else if (cmd_contains_string(argc, argv, TEXT("check-ignore")) && cmd_contains_string(argc, argv, TEXT("-v")) &&
+             cmd_contains_string(argc, argv, TEXT("-z")) && cmd_contains_string(argc, argv, TEXT("--stdin")))
+    {
+        if (!call_git_check_ignore_v_z_stdin(&dwExitCode))
+        {
+            exit(EXIT_FAILURE);
+        }
+    }
     else
     {
         if (!call_git(cmd, &dwExitCode))
