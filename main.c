@@ -1,5 +1,5 @@
 #include "call_git.h"
-#include "get_exe_path.h"
+#include "get_exe_path.h" // IWYU pragma: keep
 #include "pch.h"
 #include "set_cmd.h"
 #include "set_env.h"
