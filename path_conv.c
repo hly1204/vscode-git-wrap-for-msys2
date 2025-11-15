@@ -80,6 +80,8 @@ BOOL win_path_to_unix_path(PTCHAR buffer, DWORD dwBufferSize, LPCTSTR path)
 
     WaitForSingleObject(piCygpath.hProcess, INFINITE);
     CloseHandle(hCygpath_STD_OUT_READ);
+    CloseHandle(piCygpath.hProcess);
+    CloseHandle(piCygpath.hThread);
 
     /* Trim whitespace */
     while (--bufferEnd >= buffer && isspace(*bufferEnd))
@@ -174,6 +176,8 @@ BOOL unix_path_to_win_path(PTCHAR buffer, DWORD dwBufferSize, LPCTSTR path)
 
     WaitForSingleObject(piCygpath.hProcess, INFINITE);
     CloseHandle(hCygpath_STD_OUT_READ);
+    CloseHandle(piCygpath.hProcess);
+    CloseHandle(piCygpath.hThread);
 
     /* Trim whitespace */
     while (--bufferEnd >= buffer && isspace(*bufferEnd))
