@@ -39,7 +39,7 @@ INT _tmain(INT argc, TCHAR *argv[])
     /* set_env() is required, otherwise git may failed to use other *.exe */
     set_env();
 
-    if (cmd_contains_rev_parse(argc, argv))
+    if (cmd_contains_string(argc, argv, TEXT("rev-parse")))
     {
         if (!call_git_pipe_cygpath(cmd, &dwExitCode))
         {

@@ -3,7 +3,7 @@
 
 #include "pch.h"
 
-BOOL cmd_contains_rev_parse(INT argc, TCHAR *argv[]);
+BOOL cmd_contains_string(INT argc, TCHAR *argv[], LPCTSTR str);
 BOOL set_cmd(PTCHAR dest, DWORD dwDestSize, INT argc, TCHAR *argv[]);
 
 #endif

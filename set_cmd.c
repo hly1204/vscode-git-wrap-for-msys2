@@ -1,10 +1,10 @@
 #include "set_cmd.h"
 
-BOOL cmd_contains_rev_parse(INT argc, TCHAR *argv[])
+BOOL cmd_contains_string(INT argc, TCHAR *argv[], LPCTSTR str)
 {
     for (INT i = 1; i < argc; ++i)
     {
-        if (_tcscmp(argv[i], TEXT("rev-parse")) == 0)
+        if (_tcscmp(argv[i], str) == 0)
         {
             return TRUE;
         }
