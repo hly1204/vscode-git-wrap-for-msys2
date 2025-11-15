@@ -2,7 +2,9 @@
 
 BOOL cmd_contains_string(INT argc, TCHAR *argv[], LPCTSTR str)
 {
-    for (INT i = 1; i < argc; ++i)
+    INT i;
+
+    for (i = 1; i < argc; ++i)
     {
         if (_tcscmp(argv[i], str) == 0)
         {
@@ -14,13 +16,15 @@ BOOL cmd_contains_string(INT argc, TCHAR *argv[], LPCTSTR str)
 
 BOOL set_cmd(PTCHAR dest, DWORD dwDestSize, INT argc, TCHAR *argv[])
 {
+    INT i;
+
     if (FAILED(StringCchCopy(dest, dwDestSize, GIT_PATH)))
     {
         fprintf(stderr, "Error copy strings.\n");
         return FALSE;
     }
 
-    for (int i = 1; i < argc; ++i)
+    for (i = 1; i < argc; ++i)
     {
         if (FAILED(StringCchCat(dest, dwDestSize, TEXT(" "))))
         {

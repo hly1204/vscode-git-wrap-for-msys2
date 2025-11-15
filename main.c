@@ -9,6 +9,7 @@ INT _tmain(INT argc, TCHAR *argv[])
     TCHAR cmd[CMD_BUFSIZE];
 #ifndef NDEBUG
     TCHAR exe_path[BUFSIZE];
+    FILE *f;
 #endif
     DWORD dwExitCode;
 
@@ -19,9 +20,9 @@ INT _tmain(INT argc, TCHAR *argv[])
         SUCCEEDED(StringCchCat(exe_path, _countof(exe_path), TEXT(".log"))))
     {
 #ifdef UNICODE
-        FILE *f = _wfopen(exe_path, L"a");
+        f = _wfopen(exe_path, L"a");
 #else
-        FILE *f = fopen(exe_path, "a");
+        f = fopen(exe_path, "a");
 #endif
         if (f != NULL)
         {
@@ -37,7 +38,10 @@ INT _tmain(INT argc, TCHAR *argv[])
 #endif
 
     /* set_env() is required, otherwise git may failed to use other *.exe */
-    set_env();
+    if (!set_env())
+    {
+        exit(EXIT_FAILURE);
+    }
 
     if (cmd_contains_string(argc, argv, TEXT("rev-parse")))
     {
