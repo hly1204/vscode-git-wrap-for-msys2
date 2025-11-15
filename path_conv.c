@@ -1,6 +1,6 @@
 #include "path_conv.h"
 
-BOOL win_path_to_unix_path(PTCHAR buffer, DWORD dwBufferSize, LPCTSTR path)
+BOOL win_path_to_unix_path(PCHAR buffer, DWORD dwBufferSize, LPCTSTR path)
 {
     HANDLE hCygpath_STD_OUT_READ;
     HANDLE hCygpath_STD_OUT_WRITE;
@@ -13,7 +13,7 @@ BOOL win_path_to_unix_path(PTCHAR buffer, DWORD dwBufferSize, LPCTSTR path)
     DWORD iResult;
     DWORD iBytesRead;
 
-    PTCHAR bufferEnd = buffer;
+    PCHAR bufferEnd = buffer;
 
     ZeroMemory(&seAttr, sizeof(seAttr));
     seAttr.nLength = sizeof(seAttr);
@@ -101,7 +101,7 @@ BOOL win_path_to_unix_path(PTCHAR buffer, DWORD dwBufferSize, LPCTSTR path)
     return TRUE;
 }
 
-BOOL unix_path_to_win_path(PTCHAR buffer, DWORD dwBufferSize, LPCTSTR path)
+BOOL unix_path_to_win_path(PCHAR buffer, DWORD dwBufferSize, LPCTSTR path)
 {
     HANDLE hCygpath_STD_OUT_READ;
     HANDLE hCygpath_STD_OUT_WRITE;
@@ -114,7 +114,7 @@ BOOL unix_path_to_win_path(PTCHAR buffer, DWORD dwBufferSize, LPCTSTR path)
     DWORD iResult;
     DWORD iBytesRead;
 
-    PTCHAR bufferEnd = buffer;
+    PCHAR bufferEnd = buffer;
 
     ZeroMemory(&seAttr, sizeof(seAttr));
     seAttr.nLength = sizeof(seAttr);
