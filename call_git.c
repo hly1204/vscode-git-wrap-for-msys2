@@ -198,6 +198,7 @@ BOOL call_git_check_ignore_v_z_stdin(LPDWORD lpExitCode)
     siGit.hStdError = GetStdHandle(STD_ERROR_HANDLE);
     siGit.dwFlags |= STARTF_USESTDHANDLES;
 
+    /* Luckily Git accepts a Windows style path from stdin, so we don't need to use cygpath again and again. */
     if (!CreateProcess(NULL, (USR_BIN_PATH TEXT("\\git.exe check-ignore -v -z --stdin")), NULL, NULL, TRUE, dwFlags,
                        NULL, NULL, &siGit, &piGit))
     {
@@ -220,9 +221,8 @@ BOOL call_git_check_ignore_v_z_stdin(LPDWORD lpExitCode)
 
         while (count_null(buffer, bufferEnd) >= 4)
         {
-            iPartCount = 0;
-            bufferIterator = buffer;
-            for (; bufferIterator != bufferEnd && iPartCount < 4; ++bufferIterator)
+            for (iPartCount = 0, bufferIterator = buffer; bufferIterator != bufferEnd && iPartCount < 4;
+                 ++bufferIterator)
             {
                 if (*bufferIterator == TEXT('\0'))
                 {
@@ -232,8 +232,7 @@ BOOL call_git_check_ignore_v_z_stdin(LPDWORD lpExitCode)
 
             if (unix_path_to_win_path(path, _countof(path), partEnd[2] + 1))
             {
-                bufferIterator = buffer;
-                for (; partEnd[2] + 1 > bufferIterator; bufferIterator += iBytesWrite)
+                for (bufferIterator = buffer; partEnd[2] + 1 > bufferIterator; bufferIterator += iBytesWrite)
                 {
                     iResult = WriteFile(GetStdHandle(STD_OUTPUT_HANDLE), bufferIterator,
                                         partEnd[2] + 1 - bufferIterator /* write NULL */, &iBytesWrite, NULL);
@@ -243,9 +242,23 @@ BOOL call_git_check_ignore_v_z_stdin(LPDWORD lpExitCode)
                     }
                 }
 
-                bufferIterator = path;
-                pathEnd = path + _tcslen(path) + 1; /* write NULL */
-                for (; pathEnd > bufferIterator; bufferIterator += iBytesWrite)
+                /* Convert Windows style path to lowercase before ':',
+                   because VSCode can only recognize lowercase drive letter. */
+                for (bufferIterator = path; *bufferIterator != '\0' && *bufferIterator != ':'; ++bufferIterator)
+                {
+                    if (*bufferIterator >= 'A' && *bufferIterator <= 'Z')
+                    {
+                        *bufferIterator -= 'A';
+                        *bufferIterator += 'a';
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                for (bufferIterator = path, pathEnd = path + _tcslen(path) + 1 /* write NULL */;
+                     pathEnd > bufferIterator; bufferIterator += iBytesWrite)
                 {
                     iResult = WriteFile(GetStdHandle(STD_OUTPUT_HANDLE), bufferIterator, pathEnd - bufferIterator,
                                         &iBytesWrite, NULL);
@@ -254,8 +267,6 @@ BOOL call_git_check_ignore_v_z_stdin(LPDWORD lpExitCode)
                         break;
                     }
                 }
-
-                WriteFile(GetStdHandle(STD_OUTPUT_HANDLE), "\n", 1, &iBytesWrite, NULL);
             }
 
             if (bufferEnd == partEnd[3] + 1)

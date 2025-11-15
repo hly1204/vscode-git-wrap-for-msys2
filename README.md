@@ -32,25 +32,13 @@ cd build
 ninja
 ```
 
-If you change your installation directory of msys2 other than `c:\msys64`, you will need to change the definition in `main.c` which is
+If you change your installation directory of msys2 other than `c:\msys64`, you will need to change the definition in `pch.h` which is
 
 ```c
 #define USR_BIN_PATH TEXT("<full-path-to-msys64>\\usr\\bin")
 ```
 
 Hopefully this would work.
-
-## Known issues
-
-VSCode will call [`git check-ignore -v -z --stdin`](https://git-scm.com/docs/git-check-ignore) to check the file state. Currently it is not going to work. I may fix this later on.
-
-Here are some ideas, since Git `Read pathnames from the standard input, one per line, instead of from the command-line.`, we could simply use the `cygpath -uf -` to solve it. For the output, it should be
-
-```text
-<source> <NULL> <linenum> <NULL> <pattern> <NULL> <pathname> <NULL>
-```
-
-And another `cygpath` call is needed (and some parse stuffs).
 
 ## License
 
