@@ -276,7 +276,7 @@ BOOL call_git_check_ignore_v_z_stdin(LPDWORD lpExitCode)
             else
             {
                 memmove(buffer, partEnd[3] + 1, bufferEnd - (partEnd[3] + 1));
-                bufferEnd -= bufferEnd - (partEnd[3] + 1);
+                bufferEnd -= partEnd[3] + 1 - buffer;
             }
         }
     }
