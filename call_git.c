@@ -211,7 +211,7 @@ BOOL call_git_check_ignore_v_z_stdin(LPDWORD lpExitCode)
     CloseHandle(hGit_STDOUT_WRITE);
     for (;;)
     {
-        iResult = ReadFile(hGit_STDOUT_READ, bufferEnd, buffer + _countof(buffer) - bufferEnd, &iBytesRead, NULL);
+        iResult = ReadFile(hGit_STDOUT_READ, bufferEnd, buffer + sizeof(buffer) - bufferEnd, &iBytesRead, NULL);
 
         if (!iResult || iBytesRead == 0)
         {
@@ -230,7 +230,7 @@ BOOL call_git_check_ignore_v_z_stdin(LPDWORD lpExitCode)
                 }
             }
 
-            if (unix_path_to_win_path(path, _countof(path), partEnd[2] + 1))
+            if (unix_path_to_win_path(path, sizeof(path), partEnd[2] + 1))
             {
                 for (bufferIterator = buffer; partEnd[2] + 1 > bufferIterator; bufferIterator += iBytesWrite)
                 {
@@ -257,7 +257,7 @@ BOOL call_git_check_ignore_v_z_stdin(LPDWORD lpExitCode)
                     }
                 }
 
-                for (bufferIterator = path, pathEnd = path + _tcslen(path) + 1 /* write NULL */;
+                for (bufferIterator = path, pathEnd = path + strlen(path) + 1 /* write NULL */;
                      pathEnd > bufferIterator; bufferIterator += iBytesWrite)
                 {
                     iResult = WriteFile(GetStdHandle(STD_OUTPUT_HANDLE), bufferIterator, pathEnd - bufferIterator,
