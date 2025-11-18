@@ -219,6 +219,7 @@ BOOL call_git_check_ignore_v_z_stdin(LPDWORD lpExitCode)
         }
         bufferEnd += iBytesRead;
 
+        /* This loop could be improved, but it is not necessary. */
         while (count_null(buffer, bufferEnd) >= 4)
         {
             for (iPartCount = 0, bufferIterator = buffer; bufferIterator != bufferEnd && iPartCount < 4;
