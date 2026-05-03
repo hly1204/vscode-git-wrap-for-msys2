@@ -1,5 +1,7 @@
 # VSCode-Git-Wrap-for-Msys2
 
+If you are using msys2 git, it is still possible to use this wrap. But it is suggested using the mingw git in msys2 but not the msys2 git.
+
 What is this for? See [#134146](https://github.com/microsoft/vscode/pull/134146).
 
 Since VSCode consistently looking for an **executable** on Windows, old workarounds cannot work, so I make a wrapped executable for Msys2 Git.
